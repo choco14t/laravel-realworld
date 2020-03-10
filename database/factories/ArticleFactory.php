@@ -19,8 +19,8 @@ use Faker\Generator as Faker;
 $factory->define(EloquentArticle::class, function (Faker $faker) {
     return [
         'slug' => $faker->slug,
-        'title' => $faker->sentence(),
-        'description' => $faker->sentence,
+        'title' => $faker->sentence,
+        'description' => $faker->sentence(10),
         'body' => $faker->text,
     ];
 });
