@@ -22,5 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EloquentTag extends Model
 {
+    protected $table = 'tags';
+
     protected $fillable = ['name',];
 }

@@ -30,5 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EloquentArticle extends Model
 {
+    protected $table = 'articles';
+
     protected $fillable = ['title', 'description', 'body',];
 }
