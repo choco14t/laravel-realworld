@@ -21,3 +21,9 @@ $factory->define(EloquentTag::class, function (Faker $faker) {
         'name' => $faker->unique()->word,
     ];
 });
+
+$factory->define(EloquentTag::class, function (Faker $faker) {
+    return [
+        'name' => 'test',
+    ];
+}, 'test');
