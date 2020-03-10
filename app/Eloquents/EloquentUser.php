@@ -44,6 +44,8 @@ class EloquentUser extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
