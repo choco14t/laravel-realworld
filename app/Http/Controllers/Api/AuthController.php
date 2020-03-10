@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Eloquents\User;
+use App\Eloquents\EloquentUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUser;
 use App\Http\Requests\RegisterUser;
@@ -33,7 +33,7 @@ class AuthController extends Controller
 
     public function register(RegisterUser $request)
     {
-        $user = User::create([
+        $user = EloquentUser::create([
             'user_name' => $request->input('user.username'),
             'email' => $request->input('user.email'),
             'password' => Hash::make($request->input('user.password')),

@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\Eloquents\Article;
-use App\Eloquents\User;
+use App\Eloquents\EloquentArticle;
+use App\Eloquents\EloquentUser;
 
 class ArticlesTableSeeder extends Seeder
 {
@@ -15,11 +15,11 @@ class ArticlesTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        $userIdList = User::pluck('id')->toArray();
+        $userIdList = EloquentUser::pluck('id')->toArray();
 
-        factory(Article::class, 20)
+        factory(EloquentArticle::class, 20)
             ->make()
-            ->each(function (Article $article) use ($faker, $userIdList) {
+            ->each(function (EloquentArticle $article) use ($faker, $userIdList) {
                 $article->user_id = $faker->randomElement($userIdList);
                 $article->save();
             });

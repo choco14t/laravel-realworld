@@ -2,9 +2,9 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\Eloquents\Article;
-use App\Eloquents\Comment;
-use App\Eloquents\User;
+use App\Eloquents\EloquentArticle;
+use App\Eloquents\EloquentComment;
+use App\Eloquents\EloquentUser;
 
 class CommentsTableSeeder extends Seeder
 {
@@ -16,12 +16,12 @@ class CommentsTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        $userIdList = User::pluck('id')->toArray();
-        $articleIdList = Article::pluck('id')->toArray();
+        $userIdList = EloquentUser::pluck('id')->toArray();
+        $articleIdList = EloquentArticle::pluck('id')->toArray();
 
-        factory(Comment::class, 20)
+        factory(EloquentComment::class, 20)
             ->make()
-            ->each(function (Comment $comment) use ($faker, $userIdList, $articleIdList) {
+            ->each(function (EloquentComment $comment) use ($faker, $userIdList, $articleIdList) {
                 $comment->user_id = $faker->randomElement($userIdList);
                 $comment->article_id = $faker->randomElement($articleIdList);
                 $comment->save();

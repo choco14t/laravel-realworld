@@ -1,6 +1,6 @@
 <?php
 
-use App\Eloquents\Tag;
+use App\Eloquents\EloquentTag;
 use Illuminate\Database\Seeder;
 
 class TagsTableSeeder extends Seeder
@@ -12,6 +12,6 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Tag::class, 20)->create();
+        factory(EloquentTag::class, 20)->create();
     }
 }
