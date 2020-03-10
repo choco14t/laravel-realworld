@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Eloquents\Article;
+use App\Eloquents\EloquentArticle;
 use Faker\Generator as Faker;
 
 /*
@@ -16,7 +16,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Article::class, function (Faker $faker) {
+$factory->define(EloquentArticle::class, function (Faker $faker) {
     return [
         'slug' => $faker->slug,
         'title' => $faker->sentence(),

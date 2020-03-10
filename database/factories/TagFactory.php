@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Eloquents\Tag;
+use App\Eloquents\EloquentTag;
 use Faker\Generator as Faker;
 
 /*
@@ -16,7 +16,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Tag::class, function (Faker $faker) {
+$factory->define(EloquentTag::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->word,
     ];

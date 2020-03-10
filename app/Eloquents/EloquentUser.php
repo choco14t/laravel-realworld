@@ -8,7 +8,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
- * App\Eloquents\User
+ * App\Eloquents\EloquentUser
  *
  * @property int $id
  * @property string $username
@@ -22,25 +22,25 @@ use Tymon\JWTAuth\Facades\JWTAuth;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereBio($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereUsername($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereBio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereUsername($value)
  * @mixin \Eloquent
  * @property-read mixed $token
  * @property string $user_name
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\User whereUserName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Eloquents\EloquentUser whereUserName($value)
  */
-class User extends Authenticatable implements JWTSubject
+class EloquentUser extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -131,11 +131,11 @@ class User extends Authenticatable implements JWTSubject
 
     public function articles()
     {
-        return $this->hasMany(Article::class)->latest();
+        return $this->hasMany(EloquentArticle::class)->latest();
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class)->latest();
+        return $this->hasMany(EloquentComment::class)->latest();
     }
 }

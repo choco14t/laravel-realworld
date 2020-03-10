@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Eloquents\Article;
+use App\Eloquents\EloquentArticle;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
