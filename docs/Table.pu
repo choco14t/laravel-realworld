@@ -1,0 +1,48 @@
+@startuml
+entity users {
+    + id [PK]
+    ---
+    username [UNQ]
+    email [UNQ]
+    password [NOT NULL]
+    bio [NULL]
+    image [NULL]
+}
+
+entity articles {
+    + id [PK]
+    + user_id [PK, FK]
+    ---
+    slug [UNQ]
+    title [NOT NULL]
+    description [NOT NULL]
+    body [NOT NULL]
+}
+
+entity tags {
+    + id [PK]
+    ---
+    name [NOT NULL, UNQ]
+}
+
+entity article_tags {
+    + article_id [PK, FK]
+    + tag_id [PK, FK]
+}
+
+entity comments {
+    + id [PK]
+    + user_id [PK, FK]
+    ---
+    body [NOT NULL]
+}
+
+entity follows {
+    + follower_id [PK, FK]
+    + followed_id [PK, FK]
+}
+
+note as comment
+タイムスタンプのカラムは省略
+end note
+@enduml

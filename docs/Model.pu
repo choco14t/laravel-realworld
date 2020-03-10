@@ -1,0 +1,38 @@
+@startuml
+class User {
+    string userName
+    string email
+    string password
+    string bio
+    string image
+}
+
+class Author {
+    string userName
+    string bio
+    string image
+}
+
+class Article {
+    Slug slug
+    Author author
+    Title title
+    Body body
+    TagList tagList
+    DateTime createdAt
+    DateTime updatedAt
+    int favoritesCount
+}
+
+class Comment {
+    CommentId id
+    Author author
+    Body body
+    DateTime createdAt
+    DateTime updatedAt
+}
+
+class Tag {
+    Name name
+}
+@enduml
