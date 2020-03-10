@@ -140,4 +140,14 @@ class EloquentUser extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(EloquentComment::class)->latest();
     }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(
+            EloquentArticle::class,
+            'favorites',
+            'user_id',
+            'article_id'
+        );
+    }
 }
