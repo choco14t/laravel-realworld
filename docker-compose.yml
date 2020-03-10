@@ -1,0 +1,45 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./docker/nginx/
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - '8000:80'
+    links:
+      - app
+  app:
+    build:
+      context: ./docker/app/
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+      - ./docker/app/php.ini:/usr/local/etc/php/php.ini
+    links:
+      - db
+  db:
+    image: mysql:8.0
+    volumes:
+      - db-store:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: realworld
+      MYSQL_ROOT_PASSWORD: root
+      TZ: 'Asia/Tokyo'
+  php-cli:
+    build:
+      context: ./docker/app/
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+      - ./docker/app/php.ini:/usr/local/etc/php/php.ini
+    links:
+      - db
+
+volumes:
+  db-store:
