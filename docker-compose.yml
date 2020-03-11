@@ -23,6 +23,7 @@ services:
     image: mysql:8.0
     volumes:
       - db-store:/var/lib/mysql
+      - ./logs:/var/log/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
