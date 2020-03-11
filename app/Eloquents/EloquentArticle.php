@@ -13,6 +13,11 @@ class EloquentArticle extends Model
 
     protected $appends = ['tagList',];
 
+    public function user()
+    {
+        return $this->belongsTo(EloquentUser::class);
+    }
+
     public function tags()
     {
         return $this->belongsToMany(EloquentTag::class, 'article_tags', 'article_id', 'tag_id');
