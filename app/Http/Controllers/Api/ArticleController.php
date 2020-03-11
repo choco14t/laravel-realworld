@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Eloquents\EloquentArticle;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,5 +66,38 @@ class ArticleController extends Controller
 
     public function delete(string $slug)
     {
+        $article = EloquentArticle::query()
+            ->whereSlug($slug)
+            ->first();
+
+        if ($article === null) {
+            return response()->json([
+                'errors' => [
+                    'message' => $slug . ' is not found.'
+                ],
+            ], 404);
+        }
+
+        if ($article->user_id !== Auth::id()) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'This action is unauthorized.'
+                ],
+            ], 403);
+        }
+
+        try {
+            $article->delete();
+        } catch (Exception $e) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'Deletion failed. Please try again :('
+                ],
+            ], 500);
+        }
+
+        return [
+            'message' => $article->title . ' was deleted.'
+        ];
     }
 }
