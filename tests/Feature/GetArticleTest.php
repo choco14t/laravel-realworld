@@ -14,6 +14,7 @@ class GetArticleTest extends TestCase
     {
         parent::setUp();
         $this->seed(GetArticleTestSeeder::class);
+        $this->withoutExceptionHandling();
     }
 
     public function testFilterByTag()
