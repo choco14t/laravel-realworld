@@ -14,24 +14,23 @@ build:
       APP_ENV: testing
       DB_CONNECTION: mysql
       DB_HOST: db
-      DB_DATABASE: realworld_test
+      DB_DATABASE: scrutinizer
       DB_USERNAME: root
       DB_PASSWORD: secret
 
   dependencies:
     before:
-      - 'composer install'
-      - 'cp .env.example .env.testing'
-      - 'php artisan key:generate --env=testing'
-      - 'php artisan jwt:secret --env=testing -f'
+      - composer install
+      - cp .env.example .env.testing
 
   tests:
     override:
-      - 'phpdbg -qrr vendor/bin/phpunit'
+      - php artisan key:generate --env=testing
+      - php artisan jwt:secret --env=testing -f
+      - phpdbg -qrr vendor/bin/phpunit
 
   services:
     db:
       image: mysql:5.7
       env:
         MYSQL_ROOT_PASSWORD: secret
-        MYSQL_DATABASE: realworld_test
