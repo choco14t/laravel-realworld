@@ -10,6 +10,8 @@ build:
 
   environment:
     php: '7.3'
+    hosts:
+      local.dev: 127.0.0.1
     variables:
       APP_ENV: testing
       DB_CONNECTION: mysql
