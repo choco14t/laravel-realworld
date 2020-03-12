@@ -20,14 +20,14 @@ build:
 
   dependencies:
     before:
-      - composer install
-      - cp .env.example .env.testing
-      - php artisan key:generate --env=testing
-      - php artisan jwt:secret --env=testing -f
+      - 'composer install'
+      - 'cp .env.example .env.testing'
+      - 'php artisan key:generate --env=testing'
+      - 'php artisan jwt:secret --env=testing -f'
 
   tests:
     override:
-      - phpdbg -qrr vendor/bin/phpunit
+      - 'phpdbg -qrr vendor/bin/phpunit'
 
   services:
     db:
