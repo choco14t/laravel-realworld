@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Eloquents\EloquentArticle;
 use App\Http\Controllers\Controller;
+use App\ViewModels\ArticleViewModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,10 @@ class ArticleController extends Controller
             ->get();
 
         return [
-            'articles' => $articles->toArray(),
-            'articlesCount' => $articles->count(),
+            'articles' => $articles->map(function (EloquentArticle $article) {
+                return new ArticleViewModel($article, Auth::user());
+            }),
+            'articlesCount' => EloquentArticle::count('id'),
         ];
     }
 
@@ -43,20 +46,7 @@ class ArticleController extends Controller
             ], 404);
         }
 
-        $author = $article->user()->first();
-        $following = Auth::check() ? Auth::user()->following($article->user->id) : false;
-        $articleAuthor = [
-            'author' => [
-                'username' => $author->user_name,
-                'bio' => $author->bio,
-                'image' => $author->image,
-                'following' => $following,
-            ]
-        ];
-
-        return [
-            'article' => array_merge($article->toArray(), $articleAuthor),
-        ];
+        return new ArticleViewModel($article, Auth::user());
     }
 
     public function create()
