@@ -1,0 +1,39 @@
+checks:
+  php:
+    code_rating: true
+
+filter:
+  paths:
+    - 'app/*'
+
+build:
+
+  environment:
+    php: '7.3'
+    hosts:
+      local.dev: 127.0.0.1
+    variables:
+      APP_ENV: testing
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_DATABASE: scrutinizer
+      DB_USERNAME: root
+      DB_PASSWORD: ''
+
+  cache:
+    directories:
+      - vendor/
+
+  dependencies:
+    before:
+      - composer install
+      - cp .env.example .env.testing
+
+  tests:
+    override:
+      - php artisan key:generate --env=testing
+      - php artisan jwt:secret --env=testing -f
+      - phpdbg -qrr vendor/bin/phpunit
+
+  services:
+      mysql: 5.7
