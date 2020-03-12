@@ -18,19 +18,21 @@ class ArticleController extends Controller
 
     public function fetchList(Request $request)
     {
-        $articles = EloquentArticle::relations(Auth::id())
+        $query = EloquentArticle::relations(Auth::id())
             ->tag($request->get('tag', ''))
             ->author($request->get('author', ''))
             ->favoritedBy($request->get('favorited', ''))
             ->limit($request->get('limit', 20))
-            ->offset($request->get('offset', 0))
-            ->get();
+            ->offset($request->get('offset', 0));
+
+        $articles = $query->get();
+        $articlesCount = $query->count();
 
         return [
             'articles' => $articles->map(function (EloquentArticle $article) {
                 return new ArticleViewModel($article, Auth::user());
             }),
-            'articlesCount' => EloquentArticle::count('id'),
+            'articlesCount' => $articlesCount,
         ];
     }
 
