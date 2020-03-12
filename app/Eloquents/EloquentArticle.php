@@ -40,34 +40,35 @@ class EloquentArticle extends Model
 
     public function scopeTag(Builder $query, ?string $tagName)
     {
-        $tag = EloquentTag::whereName($tagName)->first();
-        if ($tag === null) {
+        if (empty($tagName)) {
             return $query;
         }
 
-        $articleIdList = $tag->articles()->pluck('article_id')->toArray();
+        $tag = EloquentTag::whereName($tagName)->first();
+        $articleIdList = $tag ? $tag->articles()->pluck('article_id')->toArray() : [];
 
         return $query->whereIn('id', $articleIdList);
     }
 
     public function scopeAuthor(Builder $query, ?string $userName)
     {
-        $user = EloquentUser::whereUserName($userName)->first();
-        if ($user === null) {
+        if (empty($userName)) {
             return $query;
         }
 
-        return $query->where('user_id', $user->id);
+        $user = EloquentUser::whereUserName($userName)->first();
+
+        return $query->where('user_id', $user->id ?? null);
     }
 
     public function scopeFavoritedBy(Builder $query, ?string $userName)
     {
-        $user = EloquentUser::whereUserName($userName)->first();
-        if ($user === null) {
+        if (empty($userName)) {
             return $query;
         }
 
-        $articleIdList = $user->favorites()->pluck('article_id')->toArray();
+        $user = EloquentUser::whereUserName($userName)->first();
+        $articleIdList = $user ? $user->favorites()->pluck('article_id')->toArray() : [];
 
         return $query->whereIn('id', $articleIdList);
     }
