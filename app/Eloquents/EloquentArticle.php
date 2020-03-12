@@ -4,6 +4,7 @@ namespace App\Eloquents;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class EloquentArticle extends Model
 {
@@ -11,7 +12,7 @@ class EloquentArticle extends Model
 
     protected $fillable = ['title', 'description', 'body',];
 
-    protected $appends = ['tagList',];
+    protected $with = ['tags', 'user'];
 
     public function user()
     {
@@ -36,6 +37,19 @@ class EloquentArticle extends Model
     public function getTagListAttribute()
     {
         return $this->tags()->pluck('name')->toArray();
+    }
+
+    public function scopeRelations(Builder $query, ?int $userId)
+    {
+        return $query->with([
+            'user.followers' => function (BelongsToMany $query) use ($userId) {
+                return $query->where('follower_id', $userId);
+            }
+        ])->with([
+            'favorited' => function (BelongsToMany $query) use ($userId) {
+                return $query->where('user_id', $userId);
+            }
+        ])->withCount('favorited');
     }
 
     public function scopeTag(Builder $query, ?string $tagName)

@@ -17,9 +17,12 @@ class ArticleController extends Controller
 
     public function fetchList(Request $request)
     {
-        $articles = EloquentArticle::tag($request->get('tag', ''))
+        $articles = EloquentArticle::relations(Auth::id())
+            ->tag($request->get('tag', ''))
             ->author($request->get('author', ''))
             ->favoritedBy($request->get('favorited', ''))
+            ->limit($request->get('limit', 20))
+            ->offset($request->get('offset', 0))
             ->get();
 
         return [
