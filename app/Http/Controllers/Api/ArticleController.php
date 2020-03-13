@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Eloquents\EloquentArticle;
+use App\Eloquents\EloquentTag;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostArticle;
 use App\ViewModels\ArticleViewModel;
 use Exception;
 use Illuminate\Http\Request;
@@ -51,8 +53,27 @@ class ArticleController extends Controller
         return new ArticleViewModel($article, Auth::user());
     }
 
-    public function create()
+    public function create(PostArticle $request)
     {
+        $user = Auth::user();
+
+        /** @var EloquentArticle $article */
+        $article = $user->articles()->create([
+            'title' => $request->input('article.title'),
+            'description' => $request->input('article.description'),
+            'body' => $request->input('article.body'),
+        ]);
+
+        $tags = $request->input('article.tagList') ?? [];
+        if (!empty($tags)) {
+            $articleTags = array_map(function ($tagName) {
+                return EloquentTag::firstOrCreate(['name' => $tagName])->id;
+            }, $tags);
+
+            $article->tags()->attach($articleTags);
+        }
+
+        return new ArticleViewModel($article, Auth::user());
     }
 
     public function update(string $slug)
