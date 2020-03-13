@@ -2,12 +2,16 @@
 
 namespace App\Eloquents;
 
+use App\Extensions\HasSlug;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Sluggable\SlugOptions;
 
 class EloquentArticle extends Model
 {
+    use HasSlug;
+
     protected $table = 'articles';
 
     protected $fillable = ['title', 'description', 'body',];
@@ -90,5 +94,12 @@ class EloquentArticle extends Model
         $articleIdList = $user ? $user->favorites()->pluck('article_id')->toArray() : [];
 
         return $query->whereIn('id', $articleIdList);
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
     }
 }
