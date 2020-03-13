@@ -21,7 +21,12 @@ class EloquentArticle extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(EloquentTag::class, 'article_tags', 'article_id', 'tag_id');
+        return $this->belongsToMany(
+            EloquentTag::class,
+            'article_tags',
+            'article_id',
+            'tag_id'
+        )->withTimestamps();
     }
 
     public function favorited()
