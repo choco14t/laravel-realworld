@@ -9,6 +9,7 @@ use App\Http\Requests\PostArticle;
 use App\ViewModels\ArticleViewModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
@@ -64,13 +65,23 @@ class ArticleController extends Controller
             'body' => $request->input('article.body'),
         ]);
 
-        $tags = $request->input('article.tagList') ?? [];
-        if (!empty($tags)) {
-            $articleTags = array_map(function ($tagName) {
-                return EloquentTag::firstOrCreate(['name' => $tagName])->id;
-            }, $tags);
+        $tags = Collection::make(array_map(function ($name) {
+            return ['name' => $name];
+        }, $request->input('article.tagList') ?? []));
 
-            $article->tags()->attach($articleTags);
+        if ($tags->isNotEmpty()) {
+            $existsTags = EloquentTag::query()
+                ->select(['name'])
+                ->whereIn('name', $tags)
+                ->get();
+            $notCreatedTags = $tags->whereNotIn('name', $existsTags->pluck('name'))->all();
+            EloquentTag::insert($notCreatedTags);
+
+            $attachedTags = EloquentTag::query()
+                ->select(['id'])
+                ->whereIn('name', $tags->pluck('name'))
+                ->get();
+            $article->tags()->attach($attachedTags);
         }
 
         return new ArticleViewModel($article, Auth::user());
