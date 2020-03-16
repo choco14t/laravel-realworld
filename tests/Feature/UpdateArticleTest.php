@@ -78,4 +78,47 @@ class UpdateArticleTest extends TestCase
                 ]
             ]);
     }
+
+    public function testReturnErrorsWhenRequestWithEmptyAttributes()
+    {
+        /** @var EloquentArticle $article */
+        $article = $this->loggedInUser
+            ->articles()
+            ->save(factory(EloquentArticle::class, 1)->make()->first());
+
+        $request = [
+            'article' => [
+                'title' => '',
+                'description' => '',
+                'body' => ''
+            ]
+        ];
+        $response = $this->put('/api/articles/' . $article->slug, $request, $this->headers);
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'errors' => [
+                    'title' => [],
+                    'description' => [],
+                    'body' => [],
+                ]
+            ]);
+    }
+
+    public function testReturnErrorsWhenUpdateOtherUsersArticle()
+    {
+        /** @var EloquentArticle $article */
+        $article = $this->user
+            ->articles()
+            ->save(factory(EloquentArticle::class, 1)->make()->first());
+
+        $request = [
+            'article' => [
+                'description' => 'update other users article.',
+            ]
+        ];
+        $response = $this->put('/api/articles/' . $article->slug, $request, $this->headers);
+
+        $response->assertStatus(403);
+    }
 }
