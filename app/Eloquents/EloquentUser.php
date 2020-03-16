@@ -100,7 +100,7 @@ class EloquentUser extends Authenticatable implements JWTSubject
 
     public function articles()
     {
-        return $this->hasMany(EloquentArticle::class)->latest();
+        return $this->hasMany(EloquentArticle::class, 'user_id')->latest();
     }
 
     public function comments()

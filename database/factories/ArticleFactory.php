@@ -17,9 +17,12 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(EloquentArticle::class, function (Faker $faker) {
+    $title = $faker->sentence;
+    $slug = \Illuminate\Support\Str::slug($title);
+
     return [
-        'slug' => $faker->slug,
-        'title' => $faker->sentence,
+        'slug' => $slug,
+        'title' => $title,
         'description' => $faker->sentence(10),
         'body' => $faker->text,
     ];
