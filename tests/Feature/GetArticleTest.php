@@ -2,7 +2,8 @@
 
 namespace Tests\Feature;
 
-use GetArticleTestSeeder;
+use App\Eloquents\EloquentArticle;
+use App\Eloquents\EloquentTag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,15 +11,16 @@ class GetArticleTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->seed(GetArticleTestSeeder::class);
-    }
-
     public function testFilterByTag()
     {
-        $response = $this->get('/api/articles?tag=test1');
+        /** @var EloquentTag $tag */
+        $tag = factory(EloquentTag::class, 1)->create()->first();
+
+        /** @var \Illuminate\Database\Eloquent\Collection $articles */
+        $articles = $this->setUpArticles($count = 2);
+        $articles->first()->tags()->attach($tag);
+
+        $response = $this->get('/api/articles?tag=' . $tag->name);
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -29,23 +31,32 @@ class GetArticleTest extends TestCase
 
     public function testFilterByAuthor()
     {
-        $response = $this->get('/api/articles?author=test_user');
+        $this->setUpArticles($count = 2);
+        $response = $this->get('/api/articles?author=' . $this->user->user_name);
 
         $response->assertStatus(200);
         $response->assertJson([
             'articles' => [],
-            'articlesCount' => 2,
+            'articlesCount' => $count,
         ]);
     }
 
     public function testFilterByFavorited()
     {
-        $response = $this->get('/api/articles?favorited=test_user');
+        $this->setUpArticles($count = 2);
+        $response = $this->get('/api/articles?author=' . $this->user->user_name);
 
         $response->assertStatus(200);
         $response->assertJson([
             'articles' => [],
-            'articlesCount' => 2,
+            'articlesCount' => $count,
         ]);
+    }
+
+    private function setUpArticles(int $count): iterable
+    {
+        return $this->user
+            ->articles()
+            ->saveMany(factory(EloquentArticle::class, $count)->make());
     }
 }

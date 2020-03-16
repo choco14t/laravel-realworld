@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Eloquents\EloquentArticle;
+use App\Eloquents\EloquentTag;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostArticle;
+use App\Http\Requests\UpdateArticle;
 use App\ViewModels\ArticleViewModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
@@ -51,12 +55,64 @@ class ArticleController extends Controller
         return new ArticleViewModel($article, Auth::user());
     }
 
-    public function create()
+    public function create(PostArticle $request)
     {
+        $user = Auth::user();
+
+        /** @var EloquentArticle $article */
+        $article = $user->articles()->create([
+            'title' => $request->input('article.title'),
+            'description' => $request->input('article.description'),
+            'body' => $request->input('article.body'),
+        ]);
+
+        $tags = Collection::make(array_map(function ($name) {
+            return ['name' => $name];
+        }, $request->input('article.tagList') ?? []));
+
+        if ($tags->isNotEmpty()) {
+            $existsTags = EloquentTag::query()
+                ->select(['name'])
+                ->whereIn('name', $tags)
+                ->get();
+            $notCreatedTags = $tags->whereNotIn('name', $existsTags->pluck('name'))->all();
+            EloquentTag::insert($notCreatedTags);
+
+            $attachedTags = EloquentTag::query()
+                ->select(['id'])
+                ->whereIn('name', $tags->pluck('name'))
+                ->get();
+            $article->tags()->attach($attachedTags);
+        }
+
+        return new ArticleViewModel($article, Auth::user());
     }
 
-    public function update(string $slug)
+    public function update(UpdateArticle $request, string $slug)
     {
+        $article = EloquentArticle::query()
+            ->whereSlug($slug)
+            ->first();
+
+        if ($article === null) {
+            return response()->json([
+                'errors' => [
+                    'message' => $slug . ' is not found.'
+                ],
+            ], 404);
+        }
+
+        if ($article->user_id !== Auth::id()) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'This action is unauthorized.'
+                ],
+            ], 403);
+        }
+
+        $article->fill($request->input('article'))->save();
+
+        return new ArticleViewModel($article, Auth::user());
     }
 
     public function delete(string $slug)
