@@ -79,4 +79,43 @@ class CreateArticleTest extends TestCase
 
         $this->assertContains('hello world', EloquentTag::pluck('name')->all());
     }
+
+    public function testReturnErrorsWhenInvalidatedRequest()
+    {
+        $request = [
+            'article' => [
+                'title' => '',
+                'description' => '',
+                'body' => '',
+                'tagList' => ''
+            ]
+        ];
+
+        $response = $this->postJson('/api/articles', $request, $this->headers);
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'errors' => [
+                    'title' => [],
+                    'description' => [],
+                    'body' => [],
+                    'tagList' => []
+                ]
+            ]);
+    }
+
+    public function testReturnErrorsWhenNotLoggedIn()
+    {
+        $request = [
+            'article' => [
+                'title' => 'hello world!!',
+                'description' => 'hello description',
+                'body' => 'hello!!'
+            ]
+        ];
+
+        $response = $this->postJson('/api/articles', $request);
+
+        $response->assertStatus(401);
+    }
 }
