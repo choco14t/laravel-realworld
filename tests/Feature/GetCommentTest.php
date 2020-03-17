@@ -24,7 +24,9 @@ class GetCommentTest extends TestCase
             ->first();
         $article->comments()->save($comment);
 
-        $response = $this->get("/api/articles/{$article->slug}/comments");
+        $this->loggedInUser->follow($this->user->id);
+
+        $response = $this->get("/api/articles/{$article->slug}/comments", $this->headers);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -38,7 +40,7 @@ class GetCommentTest extends TestCase
                             'username' => $this->user->user_name,
                             'bio' => $this->user->bio,
                             'image' => $this->user->image,
-                            'following' => false
+                            'following' => true
                         ]
                     ],
                 ]
