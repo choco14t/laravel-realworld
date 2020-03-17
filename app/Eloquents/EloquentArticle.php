@@ -33,6 +33,11 @@ class EloquentArticle extends Model
         )->withTimestamps();
     }
 
+    public function comments()
+    {
+        return $this->hasMany(EloquentComment::class, 'article_id');
+    }
+
     public function favorited()
     {
         return $this->belongsToMany(
