@@ -28,7 +28,7 @@ class CommentController extends Controller
 
         return [
             'comments' => $comments->map(function (EloquentComment $comment) {
-                return (new CommentViewModel($comment))->itemsWithoutKey();
+                return (new CommentViewModel($comment, Auth::user()))->itemsWithoutKey();
             })
         ];
     }
@@ -50,7 +50,7 @@ class CommentController extends Controller
             'body' => $request->input('comment.body')
         ]);
 
-        return new CommentViewModel($comment);
+        return new CommentViewModel($comment, Auth::user());
     }
 
     public function delete(string $slug, int $id)
