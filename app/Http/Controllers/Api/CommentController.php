@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Eloquents\EloquentArticle;
 use App\Eloquents\EloquentComment;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostComment;
 use App\ViewModels\CommentViewModel;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -32,8 +33,24 @@ class CommentController extends Controller
         ];
     }
 
-    public function create(string $slug)
+    public function create(PostComment $request, string $slug)
     {
+        $article = EloquentArticle::whereSlug($slug)->first();
+        if ($article === null) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'Article is not found.'
+                ]
+            ], 404);
+        }
+
+        /** @var EloquentComment $comment */
+        $comment = $article->comments()->create([
+            'user_id' => Auth::id(),
+            'body' => $request->input('comment.body')
+        ]);
+
+        return new CommentViewModel($comment);
     }
 
     public function delete(string $slug, int $id)
