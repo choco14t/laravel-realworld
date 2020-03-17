@@ -6,6 +6,8 @@ use App\Eloquents\EloquentArticle;
 use App\Eloquents\EloquentComment;
 use App\Http\Controllers\Controller;
 use App\ViewModels\CommentViewModel;
+use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -36,5 +38,45 @@ class CommentController extends Controller
 
     public function delete(string $slug, int $id)
     {
+        $article = EloquentArticle::whereSlug($slug)->first();
+        if ($article === null) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'Article is not found.'
+                ]
+            ], 404);
+        }
+
+        /** @var EloquentComment|null $comment */
+        $comment = $article->comments()->whereKey($id)->get()->first();
+        if ($comment === null) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'Comment is not found.'
+                ]
+            ], 404);
+        }
+
+        if ($comment->user_id !== Auth::id()) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'This action is unauthorized.'
+                ]
+            ], 403);
+        }
+
+        try {
+            $comment->delete();
+        } catch (Exception $e) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'Deletion failed. Please try again :('
+                ],
+            ], 500);
+        }
+
+        return [
+            'message' => 'Comment was successfully deleted.',
+        ];
     }
 }
