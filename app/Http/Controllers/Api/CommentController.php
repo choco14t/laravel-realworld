@@ -24,7 +24,9 @@ class CommentController extends Controller
             return response()->json(['message' => 'Article not Found.'], 404);
         }
 
-        $comments = $article->comments()->get();
+        $comments = EloquentComment::whereArticleId($article->id)
+            ->followers(Auth::id())
+            ->get();
 
         return [
             'comments' => $comments->map(function (EloquentComment $comment) {
