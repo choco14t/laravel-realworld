@@ -3,6 +3,7 @@
 namespace App\ViewModels;
 
 use App\Eloquents\EloquentComment;
+use App\Eloquents\EloquentUser;
 use Spatie\ViewModels\ViewModel;
 
 class CommentViewModel extends ViewModel
@@ -14,9 +15,15 @@ class CommentViewModel extends ViewModel
      */
     private $comment;
 
-    public function __construct(EloquentComment $comment)
+    /**
+     * @var EloquentUser|null
+     */
+    private $loggedInUser;
+
+    public function __construct(EloquentComment $comment, ?EloquentUser $loggedInUser)
     {
         $this->comment = $comment;
+        $this->loggedInUser = $loggedInUser;
     }
 
     public function comment()
@@ -30,7 +37,10 @@ class CommentViewModel extends ViewModel
                 'username' => $this->comment->user->user_name,
                 'bio' => $this->comment->user->bio,
                 'image' => $this->comment->user->image,
-                'following' => false
+                'following' => $this->comment->user->followers->contains(
+                    'id',
+                    $this->loggedInUser->id ?? null
+                )
             ]
         ];
     }
