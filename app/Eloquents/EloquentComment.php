@@ -8,7 +8,7 @@ class EloquentComment extends Model
 {
     protected $table = 'comments';
 
-    protected $fillable = ['body',];
+    protected $fillable = ['user_id', 'body',];
 
     protected $with = ['user',];
 
