@@ -10,13 +10,13 @@ Route::get('/profiles/{username}', 'Controllers\Api\ProfileController@show');
 Route::post('/profiles/{username}/follow', 'Controllers\Api\ProfileController@follow');
 Route::delete('/profiles/{username}/follow', 'Controllers\Api\ProfileController@unfollow');
 
+Route::get('/articles/feed', 'Controllers\Api\FeedController@fetch');
+
 Route::get('/articles', 'Controllers\Api\ArticleController@fetchList');
 Route::get('/articles/{slug}', 'Controllers\Api\ArticleController@fetch');
 Route::post('/articles', 'Controllers\Api\ArticleController@create');
 Route::put('/articles/{slug}', 'Controllers\Api\ArticleController@update');
 Route::delete('/articles/{slug}', 'Controllers\Api\ArticleController@delete');
-
-Route::get('/articles/feed', 'Controllers\Api\FeedController@fetch');
 
 Route::get('/articles/{slug}/comments', 'Controllers\Api\CommentController@fetch');
 Route::post('/articles/{slug}/comments', 'Controllers\Api\CommentController@create');
