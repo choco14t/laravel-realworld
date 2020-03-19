@@ -20,7 +20,11 @@ class FavoriteController extends Controller
         $article = EloquentArticle::whereSlug($slug)->first();
 
         if ($article === null) {
-            return response()->json([], 404);
+            return response()->json([
+                'errors' => [
+                    'message' => 'Article not Found.'
+                ]
+            ], 404);
         }
 
         if (!$article->favorited()->get()->contains('id', $user->id)) {
