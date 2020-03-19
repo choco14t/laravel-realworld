@@ -66,6 +66,11 @@ class EloquentArticle extends Model
         ])->withCount('favorited');
     }
 
+    public function scopeFeed(Builder $query, array $followingIdList)
+    {
+        return $query->whereIn('user_id', $followingIdList);
+    }
+
     public function scopeTag(Builder $query, ?string $tagName)
     {
         if (empty($tagName)) {
