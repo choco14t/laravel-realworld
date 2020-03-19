@@ -9,6 +9,8 @@ use Spatie\ViewModels\ViewModel;
 
 class ArticleViewModel extends ViewModel
 {
+    protected $ignore = ['withoutKey',];
+
     /**
      * @var EloquentArticle
      */
@@ -50,6 +52,11 @@ class ArticleViewModel extends ViewModel
                 )
             ]
         ];
+    }
+
+    public function withoutKey()
+    {
+        return $this->items()->get('article');
     }
 
     private function tagNameList()
