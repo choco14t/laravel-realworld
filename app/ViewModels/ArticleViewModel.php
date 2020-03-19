@@ -13,6 +13,7 @@ class ArticleViewModel extends ViewModel
      * @var EloquentArticle
      */
     private $article;
+
     /**
      * @var EloquentUser|null
      */
@@ -38,7 +39,7 @@ class ArticleViewModel extends ViewModel
                 'id',
                 $this->loggedInUser->id ?? null
             ),
-            "favoritesCount" => 0,
+            "favoritesCount" => $this->article->favorited->count(),
             "author" => [
                 "username" => $this->article->user->user_name,
                 "bio" => $this->article->user->bio,
