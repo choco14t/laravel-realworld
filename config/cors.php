@@ -31,7 +31,7 @@ return [
     /*
      * Matches the request origin. `[*]` allows all origins.
      */
-    'allowed_origins' => ['*'],
+    'allowed_origins' => env('CORS_ALLOWED_ORIGINS') ? explode(',', env('CORS_ALLOWED_ORIGINS')) : ['*'],
 
     /*
      * Matches the request origin with, similar to `Request::is()`
@@ -41,7 +41,7 @@ return [
     /*
      * Sets the Access-Control-Allow-Headers response header. `[*]` allows all headers.
      */
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['Authorization', 'Content-Type', 'X-Requested-With'],
 
     /*
      * Sets the Access-Control-Expose-Headers response header with these headers.
