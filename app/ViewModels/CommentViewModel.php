@@ -8,6 +8,8 @@ use Spatie\ViewModels\ViewModel;
 
 class CommentViewModel extends ViewModel
 {
+    use FormattableTimestamps;
+
     protected $ignore = ['itemsWithoutKey',];
 
     /**
@@ -30,8 +32,8 @@ class CommentViewModel extends ViewModel
     {
         return [
             'id' => $this->comment->id,
-            'createdAt' => $this->comment->created_at->toAtomString(),
-            'updatedAt' => $this->comment->updated_at->toAtomString(),
+            'createdAt' => $this->formatFrom($this->comment->created_at),
+            'updatedAt' => $this->formatFrom($this->comment->updated_at),
             'body' => $this->comment->body,
             'author' => [
                 'username' => $this->comment->user->user_name,
