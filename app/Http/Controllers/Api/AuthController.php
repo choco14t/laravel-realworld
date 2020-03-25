@@ -20,7 +20,11 @@ class AuthController extends Controller
         ];
 
         if (!$token = Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json([
+                'errors' => [
+                    'message' => 'email or password is invalid'
+                ]
+            ], 422);
         }
 
         return new UserViewModel(Auth::user());
