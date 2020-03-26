@@ -6,6 +6,7 @@ use App\Eloquents\EloquentUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUser;
 use App\Http\Requests\RegisterUser;
+use App\ViewModels\UserViewModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,16 +20,14 @@ class AuthController extends Controller
         ];
 
         if (!$token = Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json([
+                'errors' => [
+                    'message' => 'email or password is invalid'
+                ]
+            ], 422);
         }
 
-        return [
-            'user' => [
-                'email' => Auth::user()->email,
-                'password' => Auth::user()->password,
-                'token' => $token,
-            ],
-        ];
+        return new UserViewModel(Auth::user());
     }
 
     public function register(RegisterUser $request)
@@ -39,12 +38,6 @@ class AuthController extends Controller
             'password' => Hash::make($request->input('user.password')),
         ]);
 
-        return [
-            'user' => [
-                'username' => $user->user_name,
-                'email' => $user->email,
-                'password' => $user->password,
-            ],
-        ];
+        return new UserViewModel($user);
     }
 }
