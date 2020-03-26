@@ -4,12 +4,13 @@ namespace Tests\Feature;
 
 use App\Eloquents\EloquentArticle;
 use App\Eloquents\EloquentComment;
+use App\ViewModels\FormattableTimestamps;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class GetCommentTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, FormattableTimestamps;
 
     public function testGetArticleComments()
     {
@@ -33,8 +34,8 @@ class GetCommentTest extends TestCase
                 'comments' => [
                     [
                         'id' => $comment->id,
-                        'createdAt' => $comment->created_at->toAtomString(),
-                        'updatedAt' => $comment->updated_at->toAtomString(),
+                        'createdAt' => $this->formatFrom($comment->created_at),
+                        'updatedAt' => $this->formatFrom($comment->updated_at),
                         'body' => $comment->body,
                         'author' => [
                             'username' => $this->user->user_name,

@@ -9,6 +9,8 @@ use Spatie\ViewModels\ViewModel;
 
 class ArticleViewModel extends ViewModel
 {
+    use FormattableTimestamps;
+
     protected $ignore = ['withoutKey',];
 
     /**
@@ -35,8 +37,8 @@ class ArticleViewModel extends ViewModel
             "description" => $this->article->description,
             "body" => $this->article->body,
             "tagList" => $this->tagNameList(),
-            "createdAt" => $this->article->created_at->toAtomString(),
-            "updatedAt" => $this->article->updated_at->toAtomString(),
+            "createdAt" => $this->formatFrom($this->article->created_at),
+            "updatedAt" => $this->formatFrom($this->article->updated_at),
             "favorited" => $this->article->favorited->contains(
                 'id',
                 $this->loggedInUser->id ?? null

@@ -25,16 +25,18 @@ class ArticleController extends Controller
         $query = EloquentArticle::relations(Auth::id())
             ->tag($request->get('tag', ''))
             ->author($request->get('author', ''))
-            ->favoritedBy($request->get('favorited', ''))
-            ->limit($request->get('limit', 20))
-            ->offset($request->get('offset', 0));
+            ->favoritedBy($request->get('favorited', ''));
 
-        $articles = $query->get();
         $articlesCount = $query->count();
+        $articles = $query
+            ->limit($request->get('limit', 20))
+            ->offset($request->get('offset', 0))
+            ->latest()
+            ->get();
 
         return [
             'articles' => $articles->map(function (EloquentArticle $article) {
-                return new ArticleViewModel($article, Auth::user());
+                return (new ArticleViewModel($article, Auth::user()))->withoutKey();
             }),
             'articlesCount' => $articlesCount,
         ];
