@@ -22,7 +22,7 @@ class UserController extends Controller
     public function update(UpdateUser $request)
     {
         $user = Auth::user();
-        $user->fill($request->validated())->save();
+        $user->fill($request->toAttributes())->save();
 
         return new UserViewModel($user);
     }

@@ -24,4 +24,15 @@ class UpdateUser extends BaseRequest
             'bio' => 'sometimes|max:255',
         ];
     }
+
+    public function toAttributes(): array
+    {
+        $attributes = $this->validated();
+        if ($this->has('username')) {
+            $attributes['user_name'] = $attributes['username'];
+            unset($attributes['username']);
+        }
+
+        return $attributes;
+    }
 }
