@@ -19,7 +19,7 @@ class UpdateUser extends BaseRequest
         return [
             'email' => 'sometimes|max:255|email|unique:users,email,' . $this->user()->id,
             'password' => 'sometimes|min:6|max:255',
-            'username' => 'sometimes|max:255|unique:users,user_name,' . $this->user()->id,
+            'username' => 'sometimes|filled|max:255|unique:users,user_name,' . $this->user()->id,
             'image' => 'sometimes|max:2048|url',
             'bio' => 'sometimes|max:255',
         ];
@@ -28,7 +28,7 @@ class UpdateUser extends BaseRequest
     public function toAttributes(): array
     {
         $attributes = $this->validated();
-        if ($this->has('username')) {
+        if ($this->has('user.username')) {
             $attributes['user_name'] = $attributes['username'];
             unset($attributes['username']);
         }
