@@ -8,7 +8,6 @@ use App\Http\Requests\LoginUser;
 use App\Http\Requests\RegisterUser;
 use App\ViewModels\UserViewModel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -32,11 +31,7 @@ class AuthController extends Controller
 
     public function register(RegisterUser $request)
     {
-        $user = EloquentUser::create([
-            'user_name' => $request->input('user.username'),
-            'email' => $request->input('user.email'),
-            'password' => Hash::make($request->input('user.password')),
-        ]);
+        $user = EloquentUser::create($request->toAttributes());
 
         return new UserViewModel($user);
     }

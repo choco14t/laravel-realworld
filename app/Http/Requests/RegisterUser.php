@@ -2,10 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-
 class RegisterUser extends BaseRequest
 {
     /**
@@ -25,5 +21,14 @@ class RegisterUser extends BaseRequest
     public function validationData()
     {
         return $this->get('user') ?? [];
+    }
+
+    public function toAttributes(): array
+    {
+        $attributes = $this->validated();
+        $attributes['user_name'] = $attributes['username'];
+        unset($attributes['username']);
+
+        return $attributes;
     }
 }
