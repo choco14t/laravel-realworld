@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Eloquents\EloquentUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class RegisterUserTest extends TestCase
@@ -12,11 +13,13 @@ class RegisterUserTest extends TestCase
 
     public function testRegisterSuccess()
     {
+        $userName = 'new_user';
+        $password = 'password';
         $request = [
             'user' => [
                 'email' => 'new-user@example.com',
-                'password' => 'password',
-                'username' => 'new_user',
+                'password' => $password,
+                'username' => $userName,
             ]
         ];
         $response = $this->postJson('/api/users', $request);
@@ -24,6 +27,9 @@ class RegisterUserTest extends TestCase
         $response->assertStatus(200)
             ->assertJson(['user' => []])
             ->assertSeeInOrder(['email', 'token', 'username', 'bio', 'image']);
+
+        $registeredUser = EloquentUser::whereUserName($userName)->first();
+        $this->assertTrue(Hash::check($password, $registeredUser->password));
     }
 
     public function testHasRegisteredEmail()

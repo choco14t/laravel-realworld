@@ -2,22 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-
-class UpdateUser extends FormRequest
+class UpdateUser extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     public function validationData()
     {
         return $this->get('user') ?? [];
@@ -31,20 +17,22 @@ class UpdateUser extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'max:255|email|unique:users',
-            'password' => 'min:6|max:255',
-            'username' => 'max:255|unique:users,user_name',
-            'image' => 'max:2048',
-            'bio' => 'max:255',
+            'email' => 'sometimes|max:255|email|unique:users,email,' . $this->user()->id,
+            'password' => 'sometimes|min:6|max:255',
+            'username' => 'sometimes|filled|max:255|unique:users,user_name,' . $this->user()->id,
+            'image' => 'sometimes|max:2048|url',
+            'bio' => 'sometimes|max:255',
         ];
     }
 
-    protected function failedValidation(Validator $validator)
+    public function toAttributes(): array
     {
-        throw new HttpResponseException(
-            response()->json([
-                'message' => $validator->errors()->toArray(),
-            ], 403)
-        );
+        $attributes = $this->validated();
+        if ($this->has('user.username')) {
+            $attributes['user_name'] = $attributes['username'];
+            unset($attributes['username']);
+        }
+
+        return $attributes;
     }
 }

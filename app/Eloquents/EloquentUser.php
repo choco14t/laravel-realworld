@@ -2,6 +2,7 @@
 
 namespace App\Eloquents;
 
+use App\Extensions\HashedPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -9,7 +10,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class EloquentUser extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable, HashedPassword;
 
     protected $table = 'users';
 
