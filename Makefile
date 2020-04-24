@@ -9,7 +9,7 @@ down:
 ps:
 	docker-compose ps
 application:
-	docker-compose exec app bash
+	docker-compose exec app ash -l
 db:
 	docker-compose exec db bash
 restart:
