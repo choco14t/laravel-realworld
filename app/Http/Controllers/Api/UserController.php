@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateUser;
-use App\ViewModels\UserViewModel;
+use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Resources\UserResource;
+use App\UseCases\User\UpdateUser;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -16,14 +17,11 @@ class UserController extends Controller
 
     public function currentUser()
     {
-        return new UserViewModel(Auth::user());
+        return new UserResource(Auth::user());
     }
 
-    public function update(UpdateUser $request)
+    public function update(UpdateUserRequest $request, UpdateUser $usecase)
     {
-        $user = Auth::user();
-        $user->fill($request->toAttributes())->save();
-
-        return new UserViewModel($user);
+        return new UserResource($usecase($request->makeUser()));
     }
 }

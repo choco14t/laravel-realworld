@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
-class UpdateUser extends BaseRequest
+use App\Http\Requests\BaseRequest;
+use App\Models\User;
+
+class UpdateUserRequest extends BaseRequest
 {
     public function validationData()
     {
@@ -25,14 +28,18 @@ class UpdateUser extends BaseRequest
         ];
     }
 
-    public function toAttributes(): array
+    public function makeUser(): User
     {
         $attributes = $this->validated();
+
         if ($this->has('user.username')) {
             $attributes['user_name'] = $attributes['username'];
-            unset($attributes['username']);
         }
 
-        return $attributes;
+        /** @var User $user */
+        $user = $this->user();
+        $user->fill($attributes);
+
+        return $user;
     }
 }
