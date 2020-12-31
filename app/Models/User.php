@@ -8,6 +8,46 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+/**
+ * App\Models\User
+ *
+ * @property int $id
+ * @property string $user_name
+ * @property string $email
+ * @property string $password
+ * @property string|null $bio
+ * @property string|null $image
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $articles
+ * @property-read int|null $articles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $favorites
+ * @property-read int|null $favorites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|User[] $followers
+ * @property-read int|null $followers_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|User[] $followings
+ * @property-read int|null $followings_count
+ * @property-read mixed $token
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserName($value)
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, HashedPassword;
