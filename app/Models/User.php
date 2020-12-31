@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Eloquents;
+namespace App\Models;
 
 use App\Extensions\HashedPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class EloquentUser extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, HashedPassword;
 
@@ -88,31 +88,31 @@ class EloquentUser extends Authenticatable implements JWTSubject
     public function followings()
     {
         return $this
-            ->belongsToMany(self::class, 'follows', 'follower_id', 'followed_id')
+            ->belongsToMany(self::class, 'follow_users', 'followed_user_id', 'following_user_id')
             ->withTimestamps();
     }
 
     public function followers()
     {
         return $this
-            ->belongsToMany(self::class, 'follows', 'followed_id', 'follower_id')
+            ->belongsToMany(self::class, 'follow_users', 'following_user_id', 'followed_user_id')
             ->withTimestamps();
     }
 
     public function articles()
     {
-        return $this->hasMany(EloquentArticle::class, 'user_id')->latest();
+        return $this->hasMany(Article::class, 'user_id')->latest();
     }
 
     public function comments()
     {
-        return $this->hasMany(EloquentComment::class)->latest();
+        return $this->hasMany(Comment::class)->latest();
     }
 
     public function favorites()
     {
         return $this->belongsToMany(
-            EloquentArticle::class,
+            Article::class,
             'favorites',
             'user_id',
             'article_id'

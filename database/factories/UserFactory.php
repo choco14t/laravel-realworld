@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Eloquents\EloquentUser;
+use App\Models\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(EloquentUser::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
     return [
         'user_name' => $faker->userName,
         'email' => $faker->unique()->safeEmail,
@@ -29,7 +29,7 @@ $factory->define(EloquentUser::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(EloquentUser::class, function (Faker $faker) {
+$factory->state(User::class, 'test',  function (Faker $faker) {
     return [
         'user_name' => 'test_user',
         'email' => $faker->unique()->safeEmail,
@@ -39,4 +39,4 @@ $factory->define(EloquentUser::class, function (Faker $faker) {
         'email_verified_at' => now(),
         'remember_token' => Str::random(10),
     ];
-}, 'test');
+});

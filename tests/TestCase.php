@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use App\Eloquents\EloquentUser;
+use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -10,12 +10,12 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
 
     /**
-     * @var EloquentUser
+     * @var User
      */
     protected $loggedInUser;
 
     /**
-     * @var EloquentUser
+     * @var User
      */
     protected $user;
 
@@ -28,9 +28,10 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $users = factory(EloquentUser::class, 'test', 2)
+        $users = factory(User::class, 2)
+            ->state('test')
             ->make()
-            ->each(function (EloquentUser $user, int $index) {
+            ->each(function (User $user, int $index) {
                 $user->user_name .= "_{$index}";
                 $user->save();
             });

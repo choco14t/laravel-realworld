@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentUser;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +31,7 @@ class UpdateUserTest extends TestCase
         unset($expectedJson['user']['password']);
         $response->assertStatus(200)->assertJson($expectedJson);
 
-        $updatedUser = EloquentUser::find($this->loggedInUser->id);
+        $updatedUser = User::find($this->loggedInUser->id);
         $this->assertTrue(Hash::check($password, $updatedUser->password));
     }
 

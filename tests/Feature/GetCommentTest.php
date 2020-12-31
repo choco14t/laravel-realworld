@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentArticle;
-use App\Eloquents\EloquentComment;
+use App\Models\Article;
+use App\Models\Comment;
 use App\ViewModels\FormattableTimestamps;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -14,13 +14,13 @@ class GetCommentTest extends TestCase
 
     public function testGetArticleComments()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->loggedInUser->articles()->save(
-            factory(EloquentArticle::class, 1)->make()->first()
+            factory(Article::class, 1)->make()->first()
         );
 
-        /** @var EloquentComment $comment */
-        $comment = factory(EloquentComment::class, 1)
+        /** @var Comment $comment */
+        $comment = factory(Comment::class, 1)
             ->make(['user_id' => $this->user->id])
             ->first();
         $article->comments()->save($comment);

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentArticle;
+use App\Models\Article;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,10 +12,10 @@ class UpdateArticleTest extends TestCase
 
     public function testUpdateArticleWithoutTitle()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->loggedInUser
             ->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
 
         $request = [
             'article' => [
@@ -47,10 +47,10 @@ class UpdateArticleTest extends TestCase
 
     public function testUpdateArticleWithTitle()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->loggedInUser
             ->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
 
         $request = [
             'article' => [
@@ -81,10 +81,10 @@ class UpdateArticleTest extends TestCase
 
     public function testReturnErrorsWhenRequestWithEmptyAttributes()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->loggedInUser
             ->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
 
         $request = [
             'article' => [
@@ -107,10 +107,10 @@ class UpdateArticleTest extends TestCase
 
     public function testReturnErrorsWhenUpdateOtherUsersArticle()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->user
             ->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
 
         $request = [
             'article' => [

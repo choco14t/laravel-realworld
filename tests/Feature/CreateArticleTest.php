@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentTag;
+use App\Models\Tag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -45,7 +45,7 @@ class CreateArticleTest extends TestCase
 
     public function testCreateArticleWithTags()
     {
-        factory(EloquentTag::class, 'test', 1)->create();
+        factory(Tag::class, 'test', 1)->create();
 
         $request = [
             'article' => [
@@ -77,7 +77,7 @@ class CreateArticleTest extends TestCase
                 ]
             ]);
 
-        $this->assertContains('hello world', EloquentTag::pluck('name')->all());
+        $this->assertContains('hello world', Tag::pluck('name')->all());
     }
 
     public function testReturnErrorsWhenInvalidatedRequest()

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Eloquents\EloquentUser;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUser;
 use App\Http\Requests\RegisterUser;
@@ -31,7 +31,7 @@ class AuthController extends Controller
 
     public function register(RegisterUser $request)
     {
-        $user = EloquentUser::create($request->toAttributes());
+        $user = User::create($request->toAttributes());
 
         return new UserViewModel($user);
     }

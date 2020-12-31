@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Eloquents\EloquentTag;
+use App\Models\Tag;
 use Faker\Generator as Faker;
 
 /*
@@ -16,13 +16,13 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(EloquentTag::class, function (Faker $faker) {
+$factory->define(Tag::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->word,
     ];
 });
 
-$factory->define(EloquentTag::class, function (Faker $faker) {
+$factory->define(Tag::class, function (Faker $faker) {
     return [
         'name' => 'test',
     ];

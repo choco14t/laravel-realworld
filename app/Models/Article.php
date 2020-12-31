@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Eloquents;
+namespace App\Models;
 
 use App\Extensions\HasSlug;
 use Illuminate\Database\Eloquent\Builder;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Sluggable\SlugOptions;
 
-class EloquentArticle extends Model
+class Article extends Model
 {
     use HasSlug;
 
@@ -20,13 +20,13 @@ class EloquentArticle extends Model
 
     public function user()
     {
-        return $this->belongsTo(EloquentUser::class);
+        return $this->belongsTo(User::class);
     }
 
     public function tags()
     {
         return $this->belongsToMany(
-            EloquentTag::class,
+            Tag::class,
             'article_tags',
             'article_id',
             'tag_id'
@@ -35,13 +35,13 @@ class EloquentArticle extends Model
 
     public function comments()
     {
-        return $this->hasMany(EloquentComment::class, 'article_id');
+        return $this->hasMany(Comment::class, 'article_id');
     }
 
     public function favorited()
     {
         return $this->belongsToMany(
-            EloquentUser::class,
+            User::class,
             'favorites',
             'article_id',
             'user_id'
@@ -77,7 +77,7 @@ class EloquentArticle extends Model
             return $query;
         }
 
-        $tag = EloquentTag::whereName($tagName)->first();
+        $tag = Tag::whereName($tagName)->first();
         $articleIdList = $tag ? $tag->articles()->pluck('article_id')->toArray() : [];
 
         return $query->whereIn('id', $articleIdList);
@@ -89,7 +89,7 @@ class EloquentArticle extends Model
             return $query;
         }
 
-        $user = EloquentUser::whereUserName($userName)->first();
+        $user = User::whereUserName($userName)->first();
 
         return $query->where('user_id', $user->id ?? null);
     }
@@ -100,7 +100,7 @@ class EloquentArticle extends Model
             return $query;
         }
 
-        $user = EloquentUser::whereUserName($userName)->first();
+        $user = User::whereUserName($userName)->first();
         $articleIdList = $user ? $user->favorites()->pluck('article_id')->toArray() : [];
 
         return $query->whereIn('id', $articleIdList);

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentArticle;
-use App\Eloquents\EloquentComment;
+use App\Models\Article;
+use App\Models\Comment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,8 +13,8 @@ class DeleteCommentTest extends TestCase
 
     public function testDeleteSuccessful()
     {
-        /** @var EloquentArticle $article */
-        /** @var EloquentComment $comment */
+        /** @var Article $article */
+        /** @var Comment $comment */
         list($article, $comment) = $this->setUpResource($this->loggedInUser->id);
 
         $response = $this->delete(
@@ -24,13 +24,13 @@ class DeleteCommentTest extends TestCase
         );
 
         $response->assertStatus(200);
-        $this->assertNull(EloquentComment::find($comment->id));
+        $this->assertNull(Comment::find($comment->id));
     }
 
     public function testReturnErrorsWhenArticleNotFound()
     {
-        /** @var EloquentArticle $article */
-        /** @var EloquentComment $comment */
+        /** @var Article $article */
+        /** @var Comment $comment */
         list($article, $comment) = $this->setUpResource($this->loggedInUser->id);
 
         $invalidSlug = $article->slug . '_';
@@ -41,13 +41,13 @@ class DeleteCommentTest extends TestCase
         );
 
         $response->assertStatus(404);
-        $this->assertNotNull(EloquentComment::find($comment->id));
+        $this->assertNotNull(Comment::find($comment->id));
     }
 
     public function testReturnErrorsWhenCommentNotFound()
     {
-        /** @var EloquentArticle $article */
-        /** @var EloquentComment $comment */
+        /** @var Article $article */
+        /** @var Comment $comment */
         list($article, $comment) = $this->setUpResource($this->loggedInUser->id);
 
         $invalidCommentId = $comment->id + 1;
@@ -58,13 +58,13 @@ class DeleteCommentTest extends TestCase
         );
 
         $response->assertStatus(404);
-        $this->assertNotNull(EloquentComment::find($comment->id));
+        $this->assertNotNull(Comment::find($comment->id));
     }
 
     public function testReturnErrosWhenDeleteOtherUsersComment()
     {
-        /** @var EloquentArticle $article */
-        /** @var EloquentComment $comment */
+        /** @var Article $article */
+        /** @var Comment $comment */
         list($article, $comment) = $this->setUpResource($this->user->id);
 
         $response = $this->delete(
@@ -74,20 +74,20 @@ class DeleteCommentTest extends TestCase
         );
 
         $response->assertStatus(403);
-        $this->assertNotNull(EloquentComment::find($comment->id));
+        $this->assertNotNull(Comment::find($comment->id));
     }
 
     private function setUpResource(int $commentUserId)
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->user
             ->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
 
-        /** @var EloquentComment $comment */
+        /** @var Comment $comment */
         $comment = $article->comments()
             ->save(
-                factory(EloquentComment::class, 1)
+                factory(Comment::class, 1)
                     ->make(['user_id' => $commentUserId])
                     ->first()
             );

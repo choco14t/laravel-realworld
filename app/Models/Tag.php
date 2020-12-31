@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Eloquents;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EloquentTag extends Model
+class Tag extends Model
 {
     protected $table = 'tags';
 
@@ -13,7 +13,7 @@ class EloquentTag extends Model
     public function articles()
     {
         return $this->belongsToMany(
-            EloquentArticle::class,
+            Article::class,
             'article_tags',
             'tag_id',
             'article_id'

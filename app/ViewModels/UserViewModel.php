@@ -2,17 +2,17 @@
 
 namespace App\ViewModels;
 
-use App\Eloquents\EloquentUser;
+use App\Models\User;
 use Spatie\ViewModels\ViewModel;
 
 class UserViewModel extends ViewModel
 {
     /**
-     * @var EloquentUser
+     * @var User
      */
     private $user;
 
-    public function __construct(EloquentUser $user)
+    public function __construct(User $user)
     {
         $this->user = $user;
     }

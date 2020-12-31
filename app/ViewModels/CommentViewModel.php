@@ -2,8 +2,8 @@
 
 namespace App\ViewModels;
 
-use App\Eloquents\EloquentComment;
-use App\Eloquents\EloquentUser;
+use App\Models\Comment;
+use App\Models\User;
 use Spatie\ViewModels\ViewModel;
 
 class CommentViewModel extends ViewModel
@@ -13,16 +13,16 @@ class CommentViewModel extends ViewModel
     protected $ignore = ['itemsWithoutKey',];
 
     /**
-     * @var EloquentComment
+     * @var Comment
      */
     private $comment;
 
     /**
-     * @var EloquentUser|null
+     * @var User|null
      */
     private $loggedInUser;
 
-    public function __construct(EloquentComment $comment, ?EloquentUser $loggedInUser)
+    public function __construct(Comment $comment, ?User $loggedInUser)
     {
         $this->comment = $comment;
         $this->loggedInUser = $loggedInUser;

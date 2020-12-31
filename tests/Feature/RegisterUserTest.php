@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentUser;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -28,14 +28,14 @@ class RegisterUserTest extends TestCase
             ->assertJson(['user' => []])
             ->assertSeeInOrder(['email', 'token', 'username', 'bio', 'image']);
 
-        $registeredUser = EloquentUser::whereUserName($userName)->first();
+        $registeredUser = User::whereUserName($userName)->first();
         $this->assertTrue(Hash::check($password, $registeredUser->password));
     }
 
     public function testHasRegisteredEmail()
     {
-        /** @var EloquentUser $registeredUser */
-        $registeredUser = factory(EloquentUser::class, 1)->create()->first();
+        /** @var User $registeredUser */
+        $registeredUser = factory(User::class, 1)->create()->first();
 
         $request = [
             'user' => [
@@ -56,8 +56,8 @@ class RegisterUserTest extends TestCase
 
     public function testHasRegisteredUserName()
     {
-        /** @var EloquentUser $registeredUser */
-        $registeredUser = factory(EloquentUser::class, 1)->create()->first();
+        /** @var User $registeredUser */
+        $registeredUser = factory(User::class, 1)->create()->first();
 
         $request = [
             'user' => [

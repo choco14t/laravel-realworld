@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Eloquents;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class EloquentComment extends Model
+class Comment extends Model
 {
     protected $table = 'comments';
 
@@ -16,7 +16,7 @@ class EloquentComment extends Model
 
     public function user()
     {
-        return $this->belongsTo(EloquentUser::class);
+        return $this->belongsTo(User::class);
     }
 
     public function scopeFollowers(Builder $query, ?int $userId)

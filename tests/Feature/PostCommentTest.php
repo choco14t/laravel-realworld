@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentArticle;
+use App\Models\Article;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,10 +12,10 @@ class PostCommentTest extends TestCase
 
     public function testPostSuccessful()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->user
             ->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
         $request = [
             'comment' => [
                 'body' => 'test'
@@ -51,10 +51,10 @@ class PostCommentTest extends TestCase
 
     public function testReturnErrorsWhenInvalidatedRequest()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->user
             ->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
         $request = [
             'comment' => [
                 'body' => ''
@@ -72,10 +72,10 @@ class PostCommentTest extends TestCase
 
     public function testReturnErrorsWhenNotLoggedIn()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->user
             ->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
         $request = [
             'comment' => [
                 'body' => 'test'

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentArticle;
+use App\Models\Article;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -60,7 +60,7 @@ class FeedArticleTest extends TestCase
     private function setUpResources(int $articleCount)
     {
         $this->user->articles()
-            ->saveMany(factory(EloquentArticle::class, $articleCount)->make());
+            ->saveMany(factory(Article::class, $articleCount)->make());
 
         $this->loggedInUser->follow($this->user->id);
     }

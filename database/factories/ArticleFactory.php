@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Eloquents\EloquentArticle;
+use App\Models\Article;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 
@@ -17,7 +17,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(EloquentArticle::class, function (Faker $faker) {
+$factory->define(Article::class, function (Faker $faker) {
     $title = $faker->sentence;
     $slug = \Illuminate\Support\Str::slug($title);
     static $subSeconds = 1000;

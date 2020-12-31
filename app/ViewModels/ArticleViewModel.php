@@ -2,9 +2,9 @@
 
 namespace App\ViewModels;
 
-use App\Eloquents\EloquentArticle;
-use App\Eloquents\EloquentTag;
-use App\Eloquents\EloquentUser;
+use App\Models\Article;
+use App\Models\Tag;
+use App\Models\User;
 use Spatie\ViewModels\ViewModel;
 
 class ArticleViewModel extends ViewModel
@@ -14,16 +14,16 @@ class ArticleViewModel extends ViewModel
     protected $ignore = ['withoutKey',];
 
     /**
-     * @var EloquentArticle
+     * @var Article
      */
     private $article;
 
     /**
-     * @var EloquentUser|null
+     * @var User|null
      */
     private $loggedInUser;
 
-    public function __construct(EloquentArticle $article, ?EloquentUser $loggedInUser)
+    public function __construct(Article $article, ?User $loggedInUser)
     {
         $this->article = $article;
         $this->loggedInUser = $loggedInUser;
@@ -63,7 +63,7 @@ class ArticleViewModel extends ViewModel
 
     private function tagNameList()
     {
-        return $this->article->tags->map(function (EloquentTag $tag) {
+        return $this->article->tags->map(function (Tag $tag) {
             return $tag->name;
         })->toArray();
     }
