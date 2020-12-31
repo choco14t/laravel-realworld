@@ -24,7 +24,7 @@ class RegisterUserTest extends TestCase
         ];
         $response = $this->postJson('/api/users', $request);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson(['user' => []])
             ->assertSeeInOrder(['email', 'token', 'username', 'bio', 'image']);
 
