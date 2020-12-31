@@ -45,14 +45,15 @@ class CreateArticleTest extends TestCase
 
     public function testCreateArticleWithTags()
     {
-        factory(Tag::class, 'test', 1)->create();
+        /** @var Tag $tag */
+        $tag = factory(Tag::class)->create();
 
         $request = [
             'article' => [
                 'title' => 'hello world!!',
                 'description' => 'hello description',
                 'body' => 'hello!!',
-                'tagList' => ['test', 'hello world']
+                'tagList' => [$tag->name, 'hello world']
             ]
         ];
 
@@ -65,7 +66,7 @@ class CreateArticleTest extends TestCase
                     'title' => 'hello world!!',
                     'description' => 'hello description',
                     'body' => 'hello!!',
-                    'tagList' => ['test', 'hello world'],
+                    'tagList' => [$tag->name, 'hello world'],
                     'favorited' => false,
                     'favoritesCount' => 0,
                     'author' => [

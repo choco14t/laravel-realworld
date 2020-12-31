@@ -21,9 +21,3 @@ $factory->define(Tag::class, function (Faker $faker) {
         'name' => $faker->unique()->word,
     ];
 });
-
-$factory->define(Tag::class, function (Faker $faker) {
-    return [
-        'name' => 'test',
-    ];
-}, 'test');
