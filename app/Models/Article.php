@@ -57,7 +57,7 @@ class Article extends Model
     {
         return $query->with([
             'user.followers' => function (BelongsToMany $query) use ($userId) {
-                return $query->where('follower_id', $userId);
+                return $query->where('followed_user_id', $userId);
             }
         ])->with([
             'favorited' => function (BelongsToMany $query) use ($userId) {
