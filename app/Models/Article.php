@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Extensions\HasSlug;
+use App\ViewModels\FormattableTimestamps;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -46,7 +47,7 @@ use Spatie\Sluggable\SlugOptions;
  */
 class Article extends Model
 {
-    use HasSlug;
+    use HasSlug, FormattableTimestamps;
 
     protected $table = 'articles';
 

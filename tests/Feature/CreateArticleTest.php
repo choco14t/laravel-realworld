@@ -12,6 +12,7 @@ class CreateArticleTest extends TestCase
 
     public function testCreateArticleWithoutTags()
     {
+        $this->withoutExceptionHandling();
         $request = [
             'article' => [
                 'title' => 'hello world!!',
@@ -23,7 +24,7 @@ class CreateArticleTest extends TestCase
 
         $response = $this->postJson('/api/articles', $request, $this->headers);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson([
                 'article' => [
                     'slug' => 'hello-world',
@@ -45,6 +46,7 @@ class CreateArticleTest extends TestCase
 
     public function testCreateArticleWithTags()
     {
+        $this->withoutExceptionHandling();
         /** @var Tag $tag */
         $tag = factory(Tag::class)->create();
 
@@ -59,7 +61,7 @@ class CreateArticleTest extends TestCase
 
         $response = $this->postJson('/api/articles', $request, $this->headers);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson([
                 'article' => [
                     'slug' => 'hello-world',
