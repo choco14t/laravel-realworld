@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\BaseRequest;
 
-class LoginUser extends BaseRequest
+class LoginUserRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.

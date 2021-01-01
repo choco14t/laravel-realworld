@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::post('/users/login', 'Controllers\Api\AuthController@login');
 Route::post('/users', 'Controllers\Api\AuthController@register');
 

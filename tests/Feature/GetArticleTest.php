@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentArticle;
-use App\Eloquents\EloquentTag;
-use App\Eloquents\EloquentUser;
+use App\Models\Article;
+use App\Models\Tag;
+use App\Models\User;
 use App\ViewModels\ArticleViewModel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -13,13 +13,19 @@ class GetArticleTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutExceptionHandling();
+    }
+
     public function testGetAllArticles()
     {
         $this->setUpArticles($this->user, $count = 3);
 
         $response = $this->get('/api/articles');
         $articles = $this->user->articles()->latest()->get();
-        $expected = $articles->map(function (EloquentArticle $article) {
+        $expected = $articles->map(function (Article $article) {
             return (new ArticleViewModel($article, null))->withoutKey();
         });
 
@@ -32,8 +38,8 @@ class GetArticleTest extends TestCase
 
     public function testFilterByTag()
     {
-        /** @var EloquentTag $tag */
-        $tag = factory(EloquentTag::class, 1)->create()->first();
+        /** @var Tag $tag */
+        $tag = factory(Tag::class, 1)->create()->first();
 
         /** @var \Illuminate\Database\Eloquent\Collection $articles */
         $articles = $this->setUpArticles($this->user, $count = 2);
@@ -65,7 +71,7 @@ class GetArticleTest extends TestCase
     public function testFilterByFavorited()
     {
         $articles = $this->setUpArticles($this->loggedInUser, $count = 2);
-        $articles->map(function (EloquentArticle $article) {
+        $articles->map(function (Article $article) {
             $article->favorited()->attach($this->user->id);
         });
 
@@ -93,9 +99,9 @@ class GetArticleTest extends TestCase
             ->assertJsonCount($count - $offset, 'articles');
     }
 
-    private function setUpArticles(EloquentUser $user, int $count): iterable
+    private function setUpArticles(User $user, int $count): iterable
     {
         return $user->articles()
-            ->saveMany(factory(EloquentArticle::class, $count)->make());
+            ->saveMany(factory(Article::class, $count)->make());
     }
 }

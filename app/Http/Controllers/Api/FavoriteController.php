@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Eloquents\EloquentArticle;
+use App\Models\Article;
 use App\Http\Controllers\Controller;
 use App\ViewModels\ArticleViewModel;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +17,7 @@ class FavoriteController extends Controller
     public function favorite(string $slug)
     {
         $user = Auth::user();
-        $article = EloquentArticle::whereSlug($slug)->first();
+        $article = Article::whereSlug($slug)->first();
 
         if ($article === null) {
             return response()->json([
@@ -37,7 +37,7 @@ class FavoriteController extends Controller
     public function unfavorite(string $slug)
     {
         $user = Auth::user();
-        $article = EloquentArticle::whereSlug($slug)->first();
+        $article = Article::whereSlug($slug)->first();
 
         if ($article === null) {
             return response()->json([

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Eloquents\EloquentArticle;
-use App\Eloquents\EloquentComment;
+use App\Models\Article;
+use App\Models\Comment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostComment;
 use App\ViewModels\CommentViewModel;
@@ -19,17 +19,17 @@ class CommentController extends Controller
 
     public function fetch(string $slug)
     {
-        $article = EloquentArticle::whereSlug($slug)->first();
+        $article = Article::whereSlug($slug)->first();
         if ($article === null) {
             return response()->json(['message' => 'Article not Found.'], 404);
         }
 
-        $comments = EloquentComment::whereArticleId($article->id)
+        $comments = Comment::whereArticleId($article->id)
             ->followers(Auth::id())
             ->get();
 
         return [
-            'comments' => $comments->map(function (EloquentComment $comment) {
+            'comments' => $comments->map(function (Comment $comment) {
                 return (new CommentViewModel($comment, Auth::user()))->itemsWithoutKey();
             })
         ];
@@ -37,7 +37,7 @@ class CommentController extends Controller
 
     public function create(PostComment $request, string $slug)
     {
-        $article = EloquentArticle::whereSlug($slug)->first();
+        $article = Article::whereSlug($slug)->first();
         if ($article === null) {
             return response()->json([
                 'errors' => [
@@ -46,7 +46,7 @@ class CommentController extends Controller
             ], 404);
         }
 
-        /** @var EloquentComment $comment */
+        /** @var Comment $comment */
         $comment = $article->comments()->create([
             'user_id' => Auth::id(),
             'body' => $request->input('comment.body')
@@ -57,7 +57,7 @@ class CommentController extends Controller
 
     public function delete(string $slug, int $id)
     {
-        $article = EloquentArticle::whereSlug($slug)->first();
+        $article = Article::whereSlug($slug)->first();
         if ($article === null) {
             return response()->json([
                 'errors' => [
@@ -66,7 +66,7 @@ class CommentController extends Controller
             ], 404);
         }
 
-        /** @var EloquentComment|null $comment */
+        /** @var Comment|null $comment */
         $comment = $article->comments()->whereKey($id)->get()->first();
         if ($comment === null) {
             return response()->json([

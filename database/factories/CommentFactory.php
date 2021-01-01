@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Eloquents\EloquentComment;
+use App\Models\Comment;
 use Faker\Generator as Faker;
 
-$factory->define(EloquentComment::class, function (Faker $faker) {
+$factory->define(Comment::class, function (Faker $faker) {
     return [
         'body' => $faker->text,
     ];

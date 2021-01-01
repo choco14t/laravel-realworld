@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentArticle;
+use App\Models\Article;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,9 +12,9 @@ class FavoriteArticleTest extends TestCase
 
     public function testFavoriteSuccess()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->user->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
 
         $response = $this->postJson("/api/articles/{$article->slug}/favorite", [], $this->headers);
         $response->assertStatus(200)
@@ -34,9 +34,9 @@ class FavoriteArticleTest extends TestCase
 
     public function testReturnErrorsWhenNotLoggedIn()
     {
-        /** @var EloquentArticle $article */
+        /** @var Article $article */
         $article = $this->user->articles()
-            ->save(factory(EloquentArticle::class, 1)->make()->first());
+            ->save(factory(Article::class, 1)->make()->first());
 
         $response = $this->postJson("/api/articles/{$article->slug}/favorite", []);
         $response->assertStatus(401);

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Eloquents\EloquentTag;
+use App\Models\Tag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,6 +12,7 @@ class CreateArticleTest extends TestCase
 
     public function testCreateArticleWithoutTags()
     {
+        $this->withoutExceptionHandling();
         $request = [
             'article' => [
                 'title' => 'hello world!!',
@@ -23,7 +24,7 @@ class CreateArticleTest extends TestCase
 
         $response = $this->postJson('/api/articles', $request, $this->headers);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson([
                 'article' => [
                     'slug' => 'hello-world',
@@ -45,27 +46,29 @@ class CreateArticleTest extends TestCase
 
     public function testCreateArticleWithTags()
     {
-        factory(EloquentTag::class, 'test', 1)->create();
+        $this->withoutExceptionHandling();
+        /** @var Tag $tag */
+        $tag = factory(Tag::class)->create();
 
         $request = [
             'article' => [
                 'title' => 'hello world!!',
                 'description' => 'hello description',
                 'body' => 'hello!!',
-                'tagList' => ['test', 'hello world']
+                'tagList' => [$tag->name, 'hello world']
             ]
         ];
 
         $response = $this->postJson('/api/articles', $request, $this->headers);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson([
                 'article' => [
                     'slug' => 'hello-world',
                     'title' => 'hello world!!',
                     'description' => 'hello description',
                     'body' => 'hello!!',
-                    'tagList' => ['test', 'hello world'],
+                    'tagList' => [$tag->name, 'hello world'],
                     'favorited' => false,
                     'favoritesCount' => 0,
                     'author' => [
@@ -77,7 +80,7 @@ class CreateArticleTest extends TestCase
                 ]
             ]);
 
-        $this->assertContains('hello world', EloquentTag::pluck('name')->all());
+        $this->assertContains('hello world', Tag::pluck('name')->all());
     }
 
     public function testReturnErrorsWhenInvalidatedRequest()

@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
-class RegisterUser extends BaseRequest
+use App\Http\Requests\BaseRequest;
+use App\Models\User;
+
+class RegisterUserRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -23,12 +26,13 @@ class RegisterUser extends BaseRequest
         return $this->get('user') ?? [];
     }
 
-    public function toAttributes(): array
+    public function makeUser(): User
     {
         $attributes = $this->validated();
         $attributes['user_name'] = $attributes['username'];
+
         unset($attributes['username']);
 
-        return $attributes;
+        return new User($attributes);
     }
 }

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Eloquents\EloquentArticle;
-use App\Eloquents\EloquentTag;
+use App\Http\Resources\ArticleResource;
+use App\Models\Article;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PostArticle;
+use App\Http\Requests\Article\PostArticleRequest;
 use App\Http\Requests\UpdateArticle;
+use App\UseCases\Article\PostArticle;
 use App\ViewModels\ArticleViewModel;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
@@ -22,7 +22,7 @@ class ArticleController extends Controller
 
     public function fetchList(Request $request)
     {
-        $query = EloquentArticle::relations(Auth::id())
+        $query = Article::relations(Auth::id())
             ->tag($request->get('tag', ''))
             ->author($request->get('author', ''))
             ->favoritedBy($request->get('favorited', ''));
@@ -35,7 +35,7 @@ class ArticleController extends Controller
             ->get();
 
         return [
-            'articles' => $articles->map(function (EloquentArticle $article) {
+            'articles' => $articles->map(function (Article $article) {
                 return (new ArticleViewModel($article, Auth::user()))->withoutKey();
             }),
             'articlesCount' => $articlesCount,
@@ -44,7 +44,7 @@ class ArticleController extends Controller
 
     public function fetch(string $slug)
     {
-        $article = EloquentArticle::whereSlug($slug)->first();
+        $article = Article::whereSlug($slug)->first();
 
         if ($article === null) {
             return response()->json([
@@ -57,42 +57,18 @@ class ArticleController extends Controller
         return new ArticleViewModel($article, Auth::user());
     }
 
-    public function create(PostArticle $request)
+    public function create(PostArticleRequest $request, PostArticle $usecase): ArticleResource
     {
-        $user = Auth::user();
-
-        /** @var EloquentArticle $article */
-        $article = $user->articles()->create([
-            'title' => $request->input('article.title'),
-            'description' => $request->input('article.description'),
-            'body' => $request->input('article.body'),
-        ]);
-
-        $tags = Collection::make(array_map(function ($name) {
-            return ['name' => $name];
-        }, $request->input('article.tagList') ?? []));
-
-        if ($tags->isNotEmpty()) {
-            $existsTags = EloquentTag::query()
-                ->select(['name'])
-                ->whereIn('name', $tags)
-                ->get();
-            $notCreatedTags = $tags->whereNotIn('name', $existsTags->pluck('name'))->all();
-            EloquentTag::insert($notCreatedTags);
-
-            $attachedTags = EloquentTag::query()
-                ->select(['id'])
-                ->whereIn('name', $tags->pluck('name'))
-                ->get();
-            $article->tags()->attach($attachedTags);
-        }
-
-        return new ArticleViewModel($article, Auth::user());
+        return new ArticleResource($usecase(
+            Auth::user(),
+            $request->makeArticle(),
+            $request->makeTags()
+        ));
     }
 
     public function update(UpdateArticle $request, string $slug)
     {
-        $article = EloquentArticle::query()
+        $article = Article::query()
             ->whereSlug($slug)
             ->first();
 
@@ -119,7 +95,7 @@ class ArticleController extends Controller
 
     public function delete(string $slug)
     {
-        $article = EloquentArticle::query()
+        $article = Article::query()
             ->whereSlug($slug)
             ->first();
 

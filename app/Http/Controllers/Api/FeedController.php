@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Eloquents\EloquentArticle;
+use App\Models\Article;
 use App\Http\Controllers\Controller;
 use App\ViewModels\ArticleViewModel;
 use Illuminate\Http\Request;
@@ -18,7 +18,7 @@ class FeedController extends Controller
     public function fetch(Request $request)
     {
         $user = Auth::user();
-        $query = EloquentArticle::relations($user->id)
+        $query = Article::relations($user->id)
             ->feed($user->followings->pluck('id')->all())
             ->latest();
 
@@ -29,7 +29,7 @@ class FeedController extends Controller
             ->get();
 
         return [
-            'articles' => $articles->map(function (EloquentArticle $article) use ($user) {
+            'articles' => $articles->map(function (Article $article) use ($user) {
                 return (new ArticleViewModel($article, $user))->withoutKey();
             }),
             'articlesCount' => $articlesCount,

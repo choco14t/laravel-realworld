@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Eloquents\EloquentUser;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +15,7 @@ class ProfileController extends Controller
 
     public function show(string $userName)
     {
-        $user = EloquentUser::query()->where('user_name', '=', $userName)->first();
+        $user = User::query()->where('user_name', '=', $userName)->first();
 
         if ($user === null) {
             return response()->json([
@@ -38,7 +38,7 @@ class ProfileController extends Controller
 
     public function follow(string $userName)
     {
-        $user = EloquentUser::query()->where('user_name', '=', $userName)->first();
+        $user = User::query()->where('user_name', '=', $userName)->first();
 
         if ($user === null) {
             return response()->json([
@@ -61,7 +61,7 @@ class ProfileController extends Controller
 
     public function unfollow(string $userName)
     {
-        $user = EloquentUser::query()->where('user_name', '=', $userName)->first();
+        $user = User::query()->where('user_name', '=', $userName)->first();
 
         if ($user === null) {
             return response()->json([
